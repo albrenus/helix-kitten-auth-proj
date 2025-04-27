@@ -1,4 +1,6 @@
 from flask import Flask, render_template, request, redirect, url_for, session
+from datetime import datetime
+import os
 
 app = Flask(__name__)
 app.secret_key = "helixkitten_secret_key"  # Random secret for sessions
@@ -9,17 +11,14 @@ valid_credentials = {
     "67890": "9876"
 }
 
-# Log file to record all access attempts
-log_file = "access_log.txt"
+# In-memory list to store access logs
+access_logs = []
 
 # Function to log badge/PIN attempts
-from datetime import datetime
-
 def log_attempt(badge_id, pin_entered, result):
-    timestamp = datetime.now().strftime("%Y-%m-%d %I:%M%p")
-    with open(log_file, "a") as f:
-        f.write(f"Timestamp: {timestamp} | Badge ID: {badge_id} | PIN Entered: {pin_entered} | Result: {result}\n")
-
+    timestamp = datetime.now().strftime("%Y-%m-%d %I:%M %p")
+    log_entry = f"Timestamp: {timestamp} | Badge ID: {badge_id} | PIN Entered: {pin_entered} | Result: {result}"
+    access_logs.append(log_entry)
 
 # Step 1: Badge Scan Page
 @app.route("/", methods=["GET", "POST"])
@@ -63,10 +62,7 @@ def pin_entry():
 @app.route("/fingerprint")
 def fingerprint_scan():
     badge_id = session.get("badge_id", "Unknown")
-    
-    # Log that fingerprint scan was successful
     log_attempt(badge_id, "Biometric", "Access Granted")
-    
     return render_template("fingerprint_scan.html")
 
 # Step 4: Access Granted Page
@@ -74,34 +70,22 @@ def fingerprint_scan():
 def success_page():
     return render_template("success.html")
 
-
 # Step 5: Access Denied Page
 @app.route("/denied")
 def denied_page():
     return render_template("denied.html")
 
-# Step 6: View Access Logs Page
+# Step 6: View Access Logs Page (now reads from memory not file)
 @app.route("/logs")
 def view_logs():
-    try:
-        with open("access_log.txt", "r") as f:
-            log_entries = f.readlines()
-    except FileNotFoundError:
-        log_entries = []
+    return render_template("access_logs.html", logs=access_logs)
 
-    return render_template("access_logs.html", logs=log_entries)
-
-#Logout Route
+# Step 7: Logout Route
 @app.route("/logout")
 def logout():
     session.clear()
     return redirect(url_for('badge_scan'))
 
-
-import os
-
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 10000))
     app.run(host="0.0.0.0", port=port)
-
-    app.run(debug=True)
