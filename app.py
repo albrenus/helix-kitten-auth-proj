@@ -1,6 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime
 import os
+import pytz
 
 app = Flask(__name__)
 app.secret_key = "helixkitten_secret_key"  # Random secret for sessions
@@ -16,7 +17,8 @@ access_logs = []
 
 # Function to log badge/PIN attempts
 def log_attempt(badge_id, pin_entered, result):
-    timestamp = datetime.now().strftime("%Y-%m-%d %I:%M %p")
+    tz = pytz.timezone('America/Los_Angeles')
+    timestamp = datetime.now(tz).strftime("%Y-%m-%d %I:%M %p")
     log_entry = f"Timestamp: {timestamp} | Badge ID: {badge_id} | PIN Entered: {pin_entered} | Result: {result}"
     access_logs.append(log_entry)
 
