@@ -1,8 +1,10 @@
 # Pre-set valid badge IDs and PINs for demonstration
 valid_credentials = {
-    "12345": "4321",  # badge_id: pin
-    "67890": "9876"
+    "12345": "4321",
+    "67890": "9876",
+    "923520582": "2468"  # Example valid badge ID and PIN
 }
+
 
 # Log file to record access attempts
 log_file = "access_log.txt"

@@ -3,3 +3,4 @@ Timestamp: 2025-04-26 07:32PM | Badge ID: 2222 | PIN Entered: N/A | Result: Acce
 Timestamp: 2025-04-26 07:32PM | Badge ID: 12345 | PIN Entered: 4321 | Result: Access Granted
 Timestamp: 2025-04-26 07:34PM | Badge ID: 67890 | PIN Entered: Biometric | Result: Access Granted
 Timestamp: 2025-04-26 07:37PM | Badge ID: 12345 | PIN Entered: 4321 | Result: Access Granted
+Badge ID: 12345, PIN Entered: 4321, Result: Access Granted

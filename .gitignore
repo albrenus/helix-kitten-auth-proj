@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+*.log
+access_log.txt
+.env

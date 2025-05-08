@@ -2,15 +2,12 @@ from flask import Flask, render_template, request, redirect, url_for, session
 from datetime import datetime
 import os
 import pytz
+from authentication_system import valid_credentials
+
 
 app = Flask(__name__)
 app.secret_key = "helixkitten_secret_key"  # Random secret for sessions
 
-# Pre-set valid badge IDs and PINs
-valid_credentials = {
-    "12345": "4321",
-    "67890": "9876"
-}
 
 # In-memory list to store access logs
 access_logs = []
@@ -22,19 +19,34 @@ def log_attempt(badge_id, pin_entered, result):
     log_entry = f"Timestamp: {timestamp} | Badge ID: {badge_id} | PIN Entered: {pin_entered} | Result: {result}"
     access_logs.append(log_entry)
 
+@app.route("/")
+def home():
+    return redirect("/badge")
+
 # Step 1: Badge Scan Page
-@app.route("/", methods=["GET", "POST"])
+@app.route("/badge", methods=["GET", "POST"])
 def badge_scan():
-    error = None
+    error_message = None
+
     if request.method == "POST":
-        badge_id = request.form.get("badge_id")
-        if badge_id in valid_credentials:
+        raw_input = request.form.get("badge_id")
+        digits = ''.join(filter(str.isdigit, raw_input))
+
+        # Look for a valid badge ID inside the swipe data
+        badge_id = None
+        for valid_id in valid_credentials:
+            if valid_id in digits:
+                badge_id = valid_id
+                break
+
+        if badge_id and badge_id in valid_credentials:
             session["badge_id"] = badge_id
-            return redirect(url_for("pin_entry"))
+            return redirect("/pin")
         else:
-            error = "Access Denied: Invalid Badge."
-            log_attempt(badge_id, "N/A", "Access Denied: Invalid Badge")
-    return render_template("badge.html", error=error)
+            error_message = "Access Denied: Invalid Badge ID"
+
+    return render_template("badge.html", error=error_message)
+
 
 # Step 2: PIN Entry Page
 @app.route("/pin", methods=["GET", "POST"])

@@ -3,70 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <title>Helix Kitten Badge Scan</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Poppins', sans-serif;
-            background: linear-gradient(135deg, #e0f7fa, #ffffff);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
-            text-align: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #e6f7fc;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
+
         .container {
-            background-color: white;
-            padding: 40px;
+            background: white;
+            padding: 50px 40px 40px;
             border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-            width: 340px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 360px;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-        h1 {
-            margin-bottom: 24px;
-            font-size: 26px;
-            font-weight: 600;
+
+        h2 {
+            margin-bottom: 16px;
+            color: #333;
         }
+
         input[type="text"] {
+            padding: 10px;
             width: 100%;
-            padding: 12px;
-            margin: 10px 0 20px 0;
-            border: 1px solid #ccc;
+            font-size: 16px;
             border-radius: 6px;
-            font-size: 14px;
+            border: 1px solid #ccc;
+            margin-bottom: 20px;
             box-sizing: border-box;
         }
-        button {
-            width: 100%;
-            padding: 12px;
-            font-size: 14px;
-            font-weight: 600;
+
+        .btn {
+            background-color: #28a745;
             color: white;
-            background-color: #4CAF50;
+            padding: 10px 16px;
+            font-size: 15px;
             border: none;
             border-radius: 6px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
         }
-        button:hover {
-            background-color: #45a049;
+
+        .btn:hover {
+            background-color: #218838;
         }
+
         .error {
             color: red;
             margin-top: 10px;
+            font-weight: bold;
             font-size: 14px;
-            font-weight: 500;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Helix Kitten Badge Scan</h1>
-        <form method="POST">
-            <input type="text" name="badge_id" placeholder="Enter Badge ID" required>
-            <button type="submit">Scan Badge</button>
+        <h2>Helix Kitten Badge<br>Scan</h2>
+        <form action="/badge" method="POST">
+            <input type="text" name="badge_id" placeholder="Swipe your badge..." autofocus autocomplete="off">
+            <button class="btn" type="submit">Scan Badge</button>
         </form>
-
         {% if error %}
             <div class="error">{{ error }}</div>
         {% endif %}
